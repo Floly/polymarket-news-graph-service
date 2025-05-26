@@ -8,7 +8,7 @@ from .utils.parsers import fetch_google_news_rss, get_real_url_async
 logger = logging.getLogger(__name__)
 
 class NewsParser:
-    MAX_SAMPLE_SIZE = 100
+    MAX_SAMPLE_SIZE = 3
 
     async def parse_news(self, event):
         event_id = event['id']
