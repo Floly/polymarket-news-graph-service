@@ -7,9 +7,11 @@ spacy==3.7.6
 transformers==4.44.2
 sentence-transformers==3.0.1
 networkx==3.3
-torch==2.4.1
 torch-geometric==2.5.3
+scipy==1.14.0
 tsfresh==0.20.3
-numpy==1.26.4
 pandas==2.2.2
 joblib==1.4.2
+numpy>=1.26.4
+playwright
+torch

@@ -1,13 +1,18 @@
+import sys
 import logging
 import torch
 import numpy as np
 import joblib
 import pandas as pd
 from torch_geometric.loader import DataLoader
+from torch_geometric.data import Data
 from torch_geometric.utils.convert import from_networkx
 from sentence_transformers import SentenceTransformer
 from tsfresh import extract_features
-from utils.models.gcn_v2 import GCNGraphClassifier_v2
+from .utils.gcn_v2 import GCNGraphClassifier_v2
+
+
+sys.path.insert(0, 'app/')
 
 logger = logging.getLogger(__name__)
 
@@ -15,10 +20,11 @@ class InferenceEngine:
     def __init__(self):
         self.sentence_transformer = SentenceTransformer("all-MiniLM-L6-v2")
         self.gcn_model = GCNGraphClassifier_v2(13, 64)
-        state_dict = torch.load('../models/GCNGraphClassifier_v2_20250517_164339.pth')
+
+        state_dict = torch.load('models/GCNGraphClassifier_v2_20250517_164339.pth')
         self.gcn_model.load_state_dict(state_dict)
         self.gcn_model.eval()
-        with open('../models/price_predictor.pkl', 'rb') as f:
+        with open('models/price_predictor.pkl', 'rb') as f:
             self.price_clf = joblib.load(f)
 
     def run_inference(self, event, graph):

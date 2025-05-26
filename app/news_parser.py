@@ -3,7 +3,7 @@ import json
 import asyncio
 import random
 from itertools import combinations
-from utils.parsers import fetch_google_news_rss, get_real_url_async
+from .utils.parsers import fetch_google_news_rss, get_real_url_async
 
 logger = logging.getLogger(__name__)
 

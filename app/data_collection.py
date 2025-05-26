@@ -2,8 +2,8 @@ import logging
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime, timedelta
-from utils.parsers import PolymarketAPIClient, PriceHistoryFetcher, fetch_google_news_rss
-from utils.base import DateConverter
+from .utils.parsers import PolymarketAPIClient, PriceHistoryFetcher
+from .utils.base import DateConverter
 
 logger = logging.getLogger(__name__)
 

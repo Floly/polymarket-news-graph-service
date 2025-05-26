@@ -3,16 +3,16 @@ import logging
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import Application, CommandHandler, MessageHandler, filters
 import asyncio
-from data_collection import DataCollector
-from news_parser import NewsParser
-from nlp_processing import NLPProcessor
-from graph_builder import GraphBuilder
-from inference import InferenceEngine
-from storage import Storage
-from monitoring import Monitoring
-from config import Config
+from .data_collection import DataCollector
+from .news_parser import NewsParser
+from .nlp_processing import NLPProcessor
+from .graph_builder import GraphBuilder
+from .inference import InferenceEngine
+from .storage import Storage
+from .monitoring import Monitoring
+from .config import Config
 
 # FastAPI app
 app = FastAPI()
@@ -35,10 +35,10 @@ storage = Storage()
 monitoring = Monitoring()
 
 # Telegram bot handlers
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start(update: Update, context):
     await update.message.reply_text("Send a Polymarket event URL to get predictions.")
 
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_message(update: Update, context):
     url = update.message.text
     try:
         # Process the request
@@ -84,14 +84,13 @@ def format_predictions(event_data, predictions):
 @app.post("/webhook")
 async def webhook(webhook_data: TelegramWebhook):
     update = Update.de_json(webhook_data.update, bot)
-    await dp.process_update(update)
+    await bot.process_update(update)
     return {"status": "ok"}
 
 # Initialize Telegram bot
 bot = Application.builder().token(Config.TELEGRAM_BOT_TOKEN).build()
-dp = bot.dispatcher
-dp.add_handler(CommandHandler("start", start))
-dp.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+bot.add_handler(CommandHandler("start", start))
+bot.add_handler(MessageHandler(filters.Text() & ~filters.Command(), handle_message))
 
 if __name__ == "__main__":
     import uvicorn
