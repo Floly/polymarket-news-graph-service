@@ -24,9 +24,9 @@ class NLPProcessor:
             logger.error(f"Failed to initialize NLP models: {e}")
             raise
 
-    def process_event(self, event, articles):
+    def process_event(self, event):
         event_id = event['id']
-        event_path = f"../data/inference_data/{event_id}"
+        event_path = f"data/inference_data/{event_id}"
         
         # Extract entities
         event_description = event.get("description", "")
@@ -56,6 +56,9 @@ class NLPProcessor:
             }
         }
         
+        return event_entities
+        
+    def process_articles(self, articles):
         # Generate embeddings for articles
         embeddings = {}
         headers = {
@@ -68,7 +71,7 @@ class NLPProcessor:
             url = article.get('real_url', '')
             article_id = article.get('id', '')
             try:
-                response = requests.get(url, headers=headers)
+                response = requests.get(url)
                 if response.status_code != 200:
                     continue
                 soup = BeautifulSoup(response.content, 'html.parser')
@@ -81,7 +84,7 @@ class NLPProcessor:
             except Exception as e:
                 logger.warning(f"Error processing article {article_id}: {e}")
         
-        return event_entities, embeddings
+        return embeddings
 
     def normalize_unicode_text(self, text):
         try:

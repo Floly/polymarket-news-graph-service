@@ -19,7 +19,7 @@ class GraphBuilder:
 
     def build_graph(self, event, articles, embeddings):
         event_id = event['id']
-        embeddings_path = f"../data/inference_data/{event_id}/sentence_embeddings/"
+        embeddings_path = f"data/inference_data/{event_id}/sentence_embeddings/"
         
         embedded_article_ids = [x.split('.')[0] for x in os.listdir(embeddings_path)]
         valid_articles = []

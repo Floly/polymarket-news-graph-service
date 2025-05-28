@@ -50,6 +50,11 @@ class PriceHistoryFetcher:
         Returns:
             JSON response
         """
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Referer": "https://www.google.com/"
+        }
         url = "https://clob.polymarket.com/prices-history/"
         params = {
             "market": market_id,
@@ -57,7 +62,7 @@ class PriceHistoryFetcher:
             "endTs": end_ts,
             "fidelity": fidelity
         }
-        response = requests.get(url, params=params)
+        response = requests.get(url, params=params, headers=headers)
         response.raise_for_status()
 
         return response.json()
@@ -92,12 +97,14 @@ def fetch_google_news_rss(query: str, cutoff_date: str, days_back: int = 7) -> d
         'hl': 'en-US',
         'gl': 'US'
     }
-
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0",
+    }
     try:
-        response = requests.get(base_url, params=params)
+        response = requests.get(base_url, params=params, headers=headers, verify=False)
         response.raise_for_status()
     except requests.RequestException as e:
-        print(f"❌ Error fetching news: Из{e}")
+        print(f"❌ Error fetching news: {e}")
         return {}
 
     soup = BeautifulSoup(response.content, 'lxml-xml')
@@ -213,7 +220,7 @@ async def get_real_url_async(articles):
             
     return articles
 
-def get_extracted_events(path='../data/interim/articles/'):
+def get_extracted_events(path='data/interim/articles/'):
     urls = os.listdir(path)
     result = [u.split('_')[0] for u in urls]
     return result
@@ -264,7 +271,7 @@ async def url_extractor(event_id, articles, num_parallel_tasks=10):
     for result in results:
         combined_articles.extend(result)
 
-    output_path = f'../data/interim/articles/{event_id}_articles.json'
+    output_path = f'data/interim/articles/{event_id}_articles.json'
     try:
         with open(output_path, 'w') as f:
             json.dump(combined_articles, f)

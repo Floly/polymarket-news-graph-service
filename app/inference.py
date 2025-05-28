@@ -65,7 +65,7 @@ class InferenceEngine:
         question_emb = model.encode(market_question)
         
         for node_id in G.nodes:
-            article_emb = np.load(f'../data/inference_data/{market["event_id"]}/sentence_embeddings/{node_id}.npz')
+            article_emb = np.load(f'data/inference_data/{market["event_id"]}/sentence_embeddings/{node_id}.npz')
             node_vector = self.get_similarity_vector(article_emb, question_emb, model)
             G.nodes[node_id]['embedding'] = node_vector
         

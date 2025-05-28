@@ -8,10 +8,9 @@ logger = logging.getLogger(__name__)
 
 class Storage:
     def __init__(self):
-        self.root = "../data/inference_data/"
+        self.root = "data/inference_data/"
 
     def log_request(self, event_id, url):
-        log_path = f"../logs/{event_id}.log"
         logger.info(f"Received request for event {event_id}: {url}")
 
     def save_articles(self, event_id, articles):
@@ -23,6 +22,7 @@ class Storage:
 
     def save_entities(self, event_id, entities):
         path = f"{self.root}{event_id}/entities.json"
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
         with open(path, 'w') as f:
             json.dump(entities, f, indent=2)
         logger.info(f"Saved entities to {path}")

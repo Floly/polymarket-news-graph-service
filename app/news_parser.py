@@ -3,16 +3,18 @@ import json
 import asyncio
 import random
 from itertools import combinations
+from datetime import datetime
+from tqdm import tqdm
 from .utils.parsers import fetch_google_news_rss, get_real_url_async
 
 logger = logging.getLogger(__name__)
 
 class NewsParser:
-    MAX_SAMPLE_SIZE = 3
+    MAX_SAMPLE_SIZE = 20
 
     async def parse_news(self, event):
         event_id = event['id']
-        entities_path = f"../data/inference_data/{event_id}/entities.json"
+        entities_path = f"data/inference_data/{event_id}/entities.json"
         
         with open(entities_path, 'r') as f:
             event_ents = json.load(f)
@@ -43,7 +45,7 @@ class NewsParser:
     def fetch_news_for_queries(self, queries, cutoff_date):
         logger.info(f"Fetching news for {len(queries)} queries (cutoff: {cutoff_date})")
         news_data = {}
-        for query in queries:
+        for query in tqdm(queries):
             try:
                 res = fetch_google_news_rss(query, cutoff_date=cutoff_date)
                 if res:

@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 class Monitoring:
     def __init__(self):
-        self.metrics_path = "../logs/metrics.json"
+        self.metrics_path = "/logs/metrics.json"
         self.metrics = self.load_metrics()
 
     def load_metrics(self):

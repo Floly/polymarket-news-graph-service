@@ -11,7 +11,7 @@ class DataCollector:
     def __init__(self):
         self.event_api = PolymarketAPIClient("https://gamma-api.polymarket.com/events")
         self.price_api = PriceHistoryFetcher(PolymarketAPIClient("https://clob.polymarket.com/prices-history/"))
-        self.root = "../data/inference_data/"
+        self.root = "data/inference_data/"
 
     async def fetch_event_data(self, url):
         o = urlparse(url)
@@ -26,7 +26,7 @@ class DataCollector:
         Path(f'{event_path}/sentence_embeddings/').mkdir(parents=True, exist_ok=True)
         
         # Configure logging for this event
-        handler = logging.FileHandler(f'../logs/{event_id}.log')
+        handler = logging.FileHandler(f'logs/logs.log')
         handler.setLevel(logging.INFO)
         logger.addHandler(handler)
         
@@ -34,10 +34,11 @@ class DataCollector:
         now = datetime.now()
         end_ts = now.timestamp()
         start_ts = max(
-            (now - timedelta(days=14)).timestamp(),
+            (now - timedelta(days=7)).timestamp(),
             DateConverter().iso_or_yy_mm_dd_to_unix(event['markets'][0]['startDate'])
         )
         
+
         for market in event['markets']:
             try:
                 tid = market['clobTokenIds']
