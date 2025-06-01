@@ -81,7 +81,7 @@ async def predict_backbone(request):
                     "graph_prediction": predictions['graph'][i],
                     "price_prediction": predictions.get('price', {}).get(market['id'], 0.0)
                 }
-                for i, market in enumerate(event_data['markets'])
+                for i, market in enumerate(event_data['markets'][:4])
             ]
         }
     except Exception as e:

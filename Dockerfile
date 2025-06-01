@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.10-bookworm
 
 WORKDIR /app
 
@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends gcc g++ python3
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 RUN python -m spacy download en_core_web_sm
+RUN playwright install && playwright install-deps
 
 RUN apt-get purge -y --auto-remove gcc g++ python3-dev libffi-dev
 

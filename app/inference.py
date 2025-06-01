@@ -31,7 +31,7 @@ class InferenceEngine:
         graphs = []
         for market in event['markets']:
             try:
-                g = self.generate_graph(market, graph, self.sentence_transformer)
+                g = self.generate_graph(market, graph, self.sentence_transformer, event_id=event['id'])
                 graphs.append(g)
             except Exception as e:
                 logger.warning(f"Error processing market: {e}")
@@ -58,14 +58,14 @@ class InferenceEngine:
         
         return predictions
 
-    def generate_graph(self, market, G, model):
+    def generate_graph(self, market, G, model, event_id):
         pos = np.argmax(eval(market['outcomePrices']))
         y = np.where(eval(market['outcomes'])[pos] == 'No', 0, 1)
         market_question = market['question']
         question_emb = model.encode(market_question)
         
         for node_id in G.nodes:
-            article_emb = np.load(f'data/inference_data/{market["event_id"]}/sentence_embeddings/{node_id}.npz')
+            article_emb = np.load(f'data/inference_data/{event_id}/sentence_embeddings/{node_id}.npz')
             node_vector = self.get_similarity_vector(article_emb, question_emb, model)
             G.nodes[node_id]['embedding'] = node_vector
         
